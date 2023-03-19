@@ -9,11 +9,19 @@ export const RegisterPage = () => {
 
   function registerUser(e) {
     e.preventDefault()
-    axios.post('/register', {
-      name,
-      email,
-      password,
-    })
+    try{
+      axios.post('/register', {
+        name,
+        email,
+        password,
+      })
+      alert('Registration Successful. Now you can log in')
+    }catch(e){
+      alert('Registration failed please try again later')
+    }
+
+
+
   }
   return (
     <div className="mt-4 grow flex items-center justify-around">
