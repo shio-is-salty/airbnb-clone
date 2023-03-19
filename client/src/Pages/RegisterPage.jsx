@@ -1,11 +1,12 @@
 import { useState } from "react"
 
 import axios from "axios"
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 export const RegisterPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [redirect, setRedirect] = useState(false)
 
   function registerUser(e) {
     e.preventDefault()
@@ -16,12 +17,14 @@ export const RegisterPage = () => {
         password,
       })
       alert('Registration Successful. Now you can log in')
+      setRedirect(true)
     }catch(e){
       alert('Registration failed please try again later')
     }
+  }
 
-
-
+  if(redirect){
+    return <Navigate to={'/login'} />
   }
   return (
     <div className="mt-4 grow flex items-center justify-around">
@@ -48,7 +51,7 @@ export const RegisterPage = () => {
           <button className="primary">Register</button>
           <div className="text-center py-2 text-gray-500">
             Already a member?
-            <Link to={'/login'} className="text-black"> Register</Link>
+            <Link to={'/login'} className="text-black"> Login</Link>
           </div>
         </form>
       </div>
