@@ -55,12 +55,16 @@ app.post('/login', async (req, res) => {
     return
   }
 
-
-  jwt.sign({email:userDoc.email,id:userDoc._id}, jwtSecret, {}, (err, token) => {
-    if(err) throw err
-    res.cookie('token', token).json(userDoc)
+  if(passOk){
+    jwt.sign({email:userDoc.email,id:userDoc._id}, jwtSecret, {}, (err, token) => {
+      if(err) throw err
+      res.cookie('token', token).json(userDoc)
   })
-})
+
+  }
+
+
+  })
 
 app.get('/profile', (req, res) => {
   const {token} = req.cookies
@@ -69,13 +73,19 @@ app.get('/profile', (req, res) => {
     res.json(null)
   }
 
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if(err) throw err
-    const {name, email, id} = await User.findById(userData.id)
-    res.json({name, email, id})
-  })
+  if(token){
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+      if(err) throw err
+      const {name, email, id} = await User.findById(userData.id)
+      res.json({name, email, id})
+    })
+  }
+  
 })
 
+app.post('/logout', (req, res) => {
+  res.cookie('token', '').json(true)
+})
 app.listen(4000, () => {
   console.log('listening at port 4000')
 })
